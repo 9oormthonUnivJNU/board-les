@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/post")
-@RequiredArgsConstructor
+@RequiredArgsConstructor    //final 필드를 생성자로 주입 (Lombok)
 public class PostController {
 
     private final PostService postService;

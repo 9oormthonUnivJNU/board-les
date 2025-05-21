@@ -28,9 +28,9 @@ public class BoardEntity {
     @OneToMany(
             mappedBy = "boardEntity"
     )
-    @Builder.Default
+    @Builder.Default   
     @Where(clause = "status = 'REGISTERED'")
-    @org.hibernate.annotations.OrderBy(clause = "id desc")
+//    @org.hibernate.annotations.OrderBy(clause = "id desc")
     private List<PostEntity> postList = List.of();
 
 }

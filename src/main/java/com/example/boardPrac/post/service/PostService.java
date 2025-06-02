@@ -3,6 +3,8 @@ package com.example.boardPrac.post.service;
 import com.example.boardPrac.board.db.BoardRepository;
 import com.example.boardPrac.common.Api;
 import com.example.boardPrac.common.Pagination;
+import com.example.boardPrac.exception.BusinessException;
+import com.example.boardPrac.exception.ErrorCode;
 import com.example.boardPrac.post.db.PostEntity;
 import com.example.boardPrac.post.db.PostRepository;
 import com.example.boardPrac.post.model.PostRequest;
@@ -47,32 +49,25 @@ public class PostService {
         return postRepository.save(entity);
     }
 
-    /**
-     * 1. 게시글이 있는가?
-     * 2. 비밀번호가 맞는가?
+    /*  요청 들어온 게시글 ID로 DB에서 게시글 조회
+     *  게시글 없다면 -> POST_NOT_FOUND
+     *  게시글 있다면 -> 비밀번호 비교
+     *  비밀번호 틀리면 -> PASSWORD_MISMATCH
+     *  모두 통과 -> 게시글 리턴
      */
-    public PostEntity view(PostViewRequest postViewRequest) {
+    public PostEntity view(PostViewRequest request) {
+        PostEntity post = postRepository.findFirstByIdAndStatusOrderByIdDesc(
+                request.getPostId(), "REGISTERED"
+        ).orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+        //게시글이 없으면 BusinessException 예외 발생
 
-        return postRepository.findFirstByIdAndStatusOrderByIdDesc(postViewRequest.getPostId(), "REGISTERED")
-                .map( it -> {
-                    // entity 존재
-                    if(!it.getPassword().equals(postViewRequest.getPassword())){
-                        var format = "패스워드가 맞지 않습니다 %s vs %s";
-                        throw new RuntimeException(String.format(format, it.getPassword(), postViewRequest.getPassword()));
-                    }
+        if (!post.getPassword().equals(request.getPassword())) {
+            throw new BusinessException(ErrorCode.PASSWORD_MISMATCH);
+        }
 
-                    // 답변글도 같이 적용
-/*                var replyList = replyService.findAllByPostId(it.getId());
-                it.setReplyList(replyList);*/
-
-                    return it;
-
-                }).orElseThrow(
-                        ()-> {
-                            return new RuntimeException("해당 게시글이 존재 하지 않습니다 : "+postViewRequest.getPostId());
-                        }
-                );
+        return post;
     }
+
 
     public Api<List<PostEntity>> all(Pageable pageable) {
         var list = postRepository.findAll(pageable);

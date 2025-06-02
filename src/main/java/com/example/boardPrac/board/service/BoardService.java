@@ -28,6 +28,7 @@ public class BoardService {
     }
 
     public BoardDto view(Long id) {
+        //id(게시판 고유id)에 해당하는 게시판이 없으면 예외 발생
         var entity = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
         return boardConverter.toDto(entity);

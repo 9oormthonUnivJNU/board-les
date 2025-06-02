@@ -34,6 +34,11 @@ public class BoardController {
     public List<BoardDto> all() {
         return boardService.getAll();
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleIllegalArgumentException(IllegalArgumentException e) {
+        return "에러 발생: " + e.getMessage();
+    }
 }
 
 

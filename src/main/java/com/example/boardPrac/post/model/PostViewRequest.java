@@ -14,7 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PostViewRequest {
+public class PostViewRequest {  //비밀번호가 필요한 작업 (수정, 삭제 등 )
 
     @NotNull
     private Long postId;

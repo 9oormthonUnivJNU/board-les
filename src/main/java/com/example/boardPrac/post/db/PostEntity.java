@@ -44,10 +44,10 @@ public class PostEntity {
 
     private LocalDateTime postedAt;
 
-    @OneToMany(     //하나의 게시글은 여러 개의 댓글(ReplyEntity)을 가질 수 있습니다
+    @OneToMany(
             mappedBy = "post"
     )
-    @Builder.Default    // 빌더 패턴 사용 시 replyList가 null이 되지 않도록 기본값으로 빈 리스트를 설정
+    @Builder.Default
     private List<ReplyEntity> replyList = new ArrayList<>();
 
 

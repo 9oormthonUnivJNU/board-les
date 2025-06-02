@@ -19,33 +19,22 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-    private final BoardRepository boardRepository;
 
-    @PostMapping("")
-    public BoardDto create(
-            @Valid
-            @RequestBody BoardRequest boardRequest
-    ){
+    @PostMapping
+    public BoardDto create(@Valid @RequestBody BoardRequest boardRequest) {
         return boardService.create(boardRequest);
     }
 
-
-    @GetMapping("/id/{id}")
-    public BoardDto view(
-            @PathVariable Long id
-    ){
-        var entity = boardService.view(id);
-        log.info("result : {}",entity);
-        return entity;
+    @GetMapping("/{id}")
+    public BoardDto view(@PathVariable Long id) {
+        return boardService.view(id);
     }
 
-    @GetMapping("/ids/{id}")
-    public List<BoardEntity> all(
-            @PathVariable Long id
-    ){
-        return boardRepository.findAll();
+    @GetMapping("/list")
+    public List<BoardDto> all() {
+        return boardService.getAll();
     }
-
 }
+
 
 

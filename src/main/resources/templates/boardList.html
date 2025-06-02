@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시판 목록</title>
+</head>
+<body>
+<h1>게시판 목록</h1>
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>게시판 이름</th>
+    <th>상태</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="board : ${boards}">
+    <td th:text="${board.id}">1</td>
+    <td>
+      <a th:href="@{'/post/list/' + ${board.id}}" th:text="${board.boardName}">게시판 이름</a>
+    </td>
+
+    <td th:text="${board.status}">REGISTERED</td>
+
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

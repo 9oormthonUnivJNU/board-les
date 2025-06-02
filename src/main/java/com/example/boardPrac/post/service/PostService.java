@@ -22,6 +22,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
 
+    public PostEntity readOnlyView(Long postId) {
+        return postRepository.findFirstByIdAndStatusOrderByIdDesc(postId, "REGISTERED")
+                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다: " + postId));
+    }
+
     public PostEntity create(
             PostRequest postRequest
     ){

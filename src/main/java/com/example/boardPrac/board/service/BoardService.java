@@ -8,6 +8,9 @@ import com.example.boardPrac.board.model.BoardRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -15,23 +18,25 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardConverter boardConverter;
 
-
-    public BoardDto create(
-            BoardRequest boardRequest
-    ){
+    public BoardDto create(BoardRequest boardRequest) {
         var entity = BoardEntity.builder()
                 .boardName(boardRequest.getBoardName())
                 .status("REGISTERED")
-                .build()
-                ;
+                .build();
 
-        var saveEntity = boardRepository.save(entity);
-
-        return boardConverter.toDto(saveEntity);
+        return boardConverter.toDto(boardRepository.save(entity));
     }
 
     public BoardDto view(Long id) {
-        var entity = boardRepository.findById(id).get();
+        var entity = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
         return boardConverter.toDto(entity);
     }
+
+    public List<BoardDto> getAll() {
+        return boardRepository.findAll().stream()
+                .map(boardConverter::toDto)
+                .collect(Collectors.toList());
+    }
 }
+

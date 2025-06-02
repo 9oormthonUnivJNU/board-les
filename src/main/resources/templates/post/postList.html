@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${boardName} + ' - 게시글 목록'">게시글 목록</title>
+</head>
+<body>
+<h1 th:text="${boardName} + ' - 게시글 목록'">게시글 목록</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${posts}">
+        <td th:text="${post.id}">1</td>
+        <td>
+            <a th:href="@{'/post/view/' + ${post.id}}" th:text="${post.title}">제목</a>
+        </td>
+        <td th:text="${post.userName}">홍길동</td>
+        <td th:text="${#temporals.format(post.postedAt, 'yyyy-MM-dd HH:mm')}">날짜</td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{'/post/write/' + ${boardId}}">
+    <button>게시글 작성</button>
+</a>
+
+
+<br>
+<br>
+<a href="/board/list">← 게시판 목록으로</a>
+</body>
+</html>

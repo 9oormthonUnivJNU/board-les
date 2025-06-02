@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+</head>
+<body>
+<h1>게시글 작성</h1>
+
+<form id="postForm">
+    <input type="hidden" name="boardId" th:value="${boardId}" />
+
+    <label>작성자: <input type="text" name="userName" required /></label><br/>
+    <label>비밀번호(4자리): <input type="password" name="password" minlength="4" maxlength="4" required /></label><br/>
+    <label>이메일: <input type="email" name="email" required /></label><br/>
+    <label>제목: <input type="text" name="title" required /></label><br/>
+    <label>내용:<br/>
+        <textarea name="content" rows="10" cols="40" required></textarea>
+    </label><br/>
+
+    <button type="submit">등록</button>
+</form>
+
+<script>
+    document.getElementById("postForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const jsonData = {};
+
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+
+        fetch("/api/post", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(jsonData)
+        }).then(res => {
+            if (res.ok) {
+                alert("게시글이 등록되었습니다.");
+                location.href = "/post/list/" + jsonData.boardId;
+            } else {
+                alert("등록 실패");
+            }
+        });
+    });
+</script>
+
+<br/>
+<a th:href="@{'/post/list/' + ${boardId}}">← 목록으로</a>
+</body>
+</html>
